@@ -1,4 +1,4 @@
-# PaperStudio - 信笺纸设计工具
+# PaperStudio - 打印纸设计工具
 
 ![PaperStudio](https://img.shields.io/badge/Status-Active-success) ![License](https://img.shields.io/badge/License-MIT-blue)
 
