@@ -5996,8 +5996,8 @@
             } else if (key === "style") cfg.style = value;
             else cfg[key] = parseInt(value) || 0;
 
-            const w = act.getScaledWidth();
-            const h = act.getScaledHeight();
+            const w = act.width;
+            const h = act.height;
             const pathData = Utils.generateSmartRectPath(w, h, cfg, cfg.style);
             const center = act.getCenterPoint();
             const safeProps = act.toObject(["fill", "stroke", "strokeWidth", "opacity", "angle", "strokeDashArray", "strokeLineCap", "strokeLineJoin", "shadow", "globalCompositeOperation"]);
@@ -6008,8 +6008,8 @@
               ...safeProps,
               isSmartRect: true,
               cornerConfig: cfg,
-              scaleX: 1,
-              scaleY: 1,
+              scaleX: act.scaleX || 1,
+              scaleY: act.scaleY || 1,
               originX: "center",
               originY: "center",
               left: center.x,
