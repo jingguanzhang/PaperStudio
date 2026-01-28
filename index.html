@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
@@ -69,7 +69,9 @@
         transform-origin: center;
         overflow: hidden;
         border-radius: 2px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
       }
 
       .layer-item[draggable="true"] {
@@ -583,7 +585,7 @@
               <div
                 class="relative w-7 h-7 rounded hover:bg-gray-100 flex items-center justify-center group/picker border border-transparent hover:border-gray-200"
                 title="背景颜色"
-                onclick="document.getElementById('floatBgInput').click();">
+                onclick="document.getElementById('floatBgInput').click()">
                 <input type="text" id="floatBgInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" data-coloris value="#ffffff" />
                 <i class="ph ph-paint-bucket text-slate-400 group-hover/picker:text-slate-600"></i>
                 <div id="floatBgIndicator" class="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-gray-300 bg-white pointer-events-none"></div>
@@ -597,13 +599,13 @@
             </div>
 
             <div class="flex gap-1 border-r border-gray-200 pr-2">
-              <button onclick="App.tableEditor.applyStyle({align:'left'})" class="p-1.5 hover:bg-gray-100 rounded text-slate-500 hover:text-slate-900">
+              <button onclick="App.tableEditor.applyStyle({ align: 'left' })" class="p-1.5 hover:bg-gray-100 rounded text-slate-500 hover:text-slate-900">
                 <i class="ph ph-text-align-left"></i>
               </button>
-              <button onclick="App.tableEditor.applyStyle({align:'center'})" class="p-1.5 hover:bg-gray-100 rounded text-slate-500 hover:text-slate-900">
+              <button onclick="App.tableEditor.applyStyle({ align: 'center' })" class="p-1.5 hover:bg-gray-100 rounded text-slate-500 hover:text-slate-900">
                 <i class="ph ph-text-align-center"></i>
               </button>
-              <button onclick="App.tableEditor.applyStyle({align:'right'})" class="p-1.5 hover:bg-gray-100 rounded text-slate-500 hover:text-slate-900">
+              <button onclick="App.tableEditor.applyStyle({ align: 'right' })" class="p-1.5 hover:bg-gray-100 rounded text-slate-500 hover:text-slate-900">
                 <i class="ph ph-text-align-right"></i>
               </button>
               <button id="floatMergeBtn" class="relative flex items-center justify-center p-1.5 hover:bg-gray-100 rounded text-slate-500 hover:text-slate-900" title="合并">
@@ -847,7 +849,13 @@
                   <label class="compact-label">背景颜色</label>
                   <div class="flex items-center gap-2">
                     <input type="color" id="paperBgColor" value="#ffffff" oninput="App.paper.drawGrid()" class="h-7 w-full p-0 border-0 rounded cursor-pointer" />
-                    <button onclick="document.getElementById('paperBgColor').value='#ffffff'; App.paper.drawGrid()" class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs" title="重置为白色">
+                    <button
+                      onclick="
+                        document.getElementById('paperBgColor').value = '#ffffff';
+                        App.paper.drawGrid();
+                      "
+                      class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs"
+                      title="重置为白色">
                       <i class="ph ph-arrow-counter-clockwise"></i>
                     </button>
                   </div>
@@ -932,7 +940,15 @@
               <div data-paper-types="ruled,english,composition">
                 <div class="flex justify-between mb-1">
                   <label class="compact-label">行数</label>
-                  <input type="number" id="rowCountDisplay" value="20" class="editable-num bg-gray-100" oninput="document.getElementById('rowCount').value=this.value; App.paper.updateSettings()" />
+                  <input
+                    type="number"
+                    id="rowCountDisplay"
+                    value="20"
+                    class="editable-num bg-gray-100"
+                    oninput="
+                      document.getElementById('rowCount').value = this.value;
+                      App.paper.updateSettings();
+                    " />
                 </div>
                 <input
                   type="range"
@@ -1003,7 +1019,10 @@
                       id="columnCountDisplay"
                       value="12"
                       class="editable-num bg-gray-100"
-                      oninput="document.getElementById('columnCount').value=this.value; App.paper.updateSettings()" />
+                      oninput="
+                        document.getElementById('columnCount').value = this.value;
+                        App.paper.updateSettings();
+                      " />
                   </div>
                   <input
                     type="range"
@@ -1025,7 +1044,10 @@
                       id="gridColDisplay"
                       value="24"
                       class="editable-num bg-gray-100"
-                      oninput="document.getElementById('gridColumns').value=this.value; App.paper.updateSettings()" />
+                      oninput="
+                        document.getElementById('gridColumns').value = this.value;
+                        App.paper.updateSettings();
+                      " />
                   </div>
                   <input
                     type="range"
@@ -1407,8 +1429,10 @@
                   min="0"
                   max="1"
                   step="0.01"
-                  oninput="App.ui.setProp('opacity', parseFloat(this.value)); 
-                document.getElementById('opacityVal').innerText=Math.round(this.value*100)+'%'"
+                  oninput="
+                    App.ui.setProp('opacity', parseFloat(this.value));
+                    document.getElementById('opacityVal').innerText = Math.round(this.value * 100) + '%';
+                  "
                   class="w-full accent-red-600 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
               </section>
 
@@ -1551,7 +1575,7 @@
                   <div class="flex-1">
                     <label class="compact-label">字体</label>
                     <select id="propFont" onchange="App.ui.setProp('fontFamily', this.value)" onclick="App.loadLocalFonts()" class="w-full compact-input border rounded bg-white">
-                      <option value="SourceHanSerifCN-Bold" style="font-family: 'SourceHanSerifCN-Bold'">思源宋体</option>
+                      <option value="SourceHanSerifCN-Bold" style="font-family: &quot;SourceHanSerifCN-Bold&quot;">思源宋体</option>
                       <option value="SimSun">宋体</option>
                       <option value="KaiTi">楷体</option>
                       <option value="SimHei">黑体</option>
@@ -1585,14 +1609,17 @@
                   </div>
                 </div>
                 <div class="flex border rounded overflow-hidden flex-1">
-                  <button onclick="App.ui.setProp('textAlign', 'left')" class="flex-1 py-1 hover:bg-gray-50 border-r flex justify-center">
+                  <button onclick="App.ui.setProp('textAlign', 'left')" class="flex-1 py-1 hover:bg-gray-50 border-r flex justify-center" title="左对齐">
                     <i class="ph ph-text-align-left"></i>
                   </button>
-                  <button onclick="App.ui.setProp('textAlign', 'center')" class="flex-1 py-1 hover:bg-gray-50 border-r flex justify-center">
+                  <button onclick="App.ui.setProp('textAlign', 'center')" class="flex-1 py-1 hover:bg-gray-50 border-r flex justify-center" title="居中">
                     <i class="ph ph-text-align-center"></i>
                   </button>
-                  <button onclick="App.ui.setProp('textAlign', 'right')" class="flex-1 py-1 hover:bg-gray-50 flex justify-center">
+                  <button onclick="App.ui.setProp('textAlign', 'right')" class="flex-1 py-1 hover:bg-gray-50 flex justify-center" title="右对齐">
                     <i class="ph ph-text-align-right"></i>
+                  </button>
+                  <button onclick="App.ui.setProp('textAlign', 'justify')" class="flex-1 py-1 hover:bg-gray-50 flex justify-center" title="两端对齐">
+                    <i class="ph ph-text-align-justify"></i>
                   </button>
                 </div>
                 <div>
@@ -1604,7 +1631,10 @@
                       value="1.2"
                       step="0.1"
                       class="editable-num bg-gray-100"
-                      oninput="document.getElementById('propLineHeight').value=this.value; App.ui.setProp('lineHeight', parseFloat(this.value))" />
+                      oninput="
+                        document.getElementById('propLineHeight').value = this.value;
+                        App.ui.setProp('lineHeight', parseFloat(this.value));
+                      " />
                   </label>
                   <input
                     type="range"
@@ -1613,7 +1643,10 @@
                     max="10"
                     step="0.1"
                     value="1.2"
-                    oninput="App.ui.setProp('lineHeight', parseFloat(this.value)); document.getElementById('lineHeightVal').value=this.value"
+                    oninput="
+                      App.ui.setProp('lineHeight', parseFloat(this.value));
+                      document.getElementById('lineHeightVal').value = this.value;
+                    "
                     class="w-full accent-red-600 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
                 </div>
                 <div>
@@ -1625,7 +1658,10 @@
                       value="0"
                       step="10"
                       class="editable-num bg-gray-100"
-                      oninput="document.getElementById('propCharSpacing').value=this.value; App.ui.setProp('charSpacing', parseInt(this.value))" />
+                      oninput="
+                        document.getElementById('propCharSpacing').value = this.value;
+                        App.ui.setProp('charSpacing', parseInt(this.value));
+                      " />
                   </label>
                   <input
                     type="range"
@@ -1633,7 +1669,10 @@
                     min="-500"
                     max="10000"
                     step="10"
-                    oninput="App.ui.setProp('charSpacing', parseInt(this.value)); document.getElementById('charSpacingVal').value=this.value"
+                    oninput="
+                      App.ui.setProp('charSpacing', parseInt(this.value));
+                      document.getElementById('charSpacingVal').value = this.value;
+                    "
                     class="w-full accent-red-600 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
                 </div>
               </section>
@@ -1826,7 +1865,10 @@
                           id="masterRadiusVal"
                           value="0"
                           class="editable-num bg-gray-100"
-                          oninput="document.getElementById('masterRadius').value=this.value; App.tools.updateSmartCorner('all', this.value)" />
+                          oninput="
+                            document.getElementById('masterRadius').value = this.value;
+                            App.tools.updateSmartCorner('all', this.value);
+                          " />
                       </label>
                       <input
                         type="range"
@@ -1922,7 +1964,7 @@
                       type="text"
                       id="propSharedInput"
                       class="w-full compact-input border rounded disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
-                      onkeydown="if(event.key === 'Enter') App.ui.saveSharedId()"
+                      onkeydown="if (event.key === 'Enter') App.ui.saveSharedId();"
                       placeholder="输入共享名 (如: price)" />
                     <button
                       id="propSharedBtn"
@@ -2547,6 +2589,53 @@
 
           applyCustomRotationControls(fabric.Object.prototype.controls);
           applyCustomRotationControls(fabric.Textbox.prototype.controls);
+
+          const baseRenderTextbox = fabric.Textbox.prototype._renderTextLine;
+          const baseRenderIText = fabric.IText.prototype._renderTextLine;
+
+          function renderJustifiedTextLine(baseMethod, method, ctx, line, left, top, lineIndex) {
+            const isLastLine = lineIndex === this._textLines.length - 1;
+            if (this.textAlign !== "justify" || isLastLine || this.isVertical) {
+              return baseMethod.call(this, method, ctx, line, left, top, lineIndex);
+            }
+
+            const characters = line;
+            if (characters.length <= 1) {
+              return baseMethod.call(this, method, ctx, line, left, top, lineIndex);
+            }
+
+            if (!this.__charBounds || !this.__charBounds[lineIndex]) {
+              return baseMethod.call(this, method, ctx, line, left, top, lineIndex);
+            }
+
+            let actualLineWidth = 0;
+            for (let i = 0; i < characters.length; i++) {
+              const charBox = this.__charBounds[lineIndex][i];
+              if (charBox) actualLineWidth += charBox.width;
+            }
+
+            const targetWidth = this.width;
+            const totalSpace = targetWidth - actualLineWidth;
+            if (totalSpace < 0) {
+              return baseMethod.call(this, method, ctx, line, left, top, lineIndex);
+            }
+
+            const spacePerChar = totalSpace / (characters.length - 1);
+            let currentLeft = left;
+            for (let i = 0; i < characters.length; i++) {
+              const char = characters[i];
+              this._renderChar(method, ctx, lineIndex, i, char, currentLeft, top);
+              const charBox = this.__charBounds[lineIndex][i];
+              const charWidth = charBox ? charBox.width : 0;
+              currentLeft += charWidth + spacePerChar;
+            }
+          }
+          fabric.Textbox.prototype._renderTextLine = function (method, ctx, line, left, top, lineIndex) {
+            renderJustifiedTextLine.call(this, baseRenderTextbox, method, ctx, line, left, top, lineIndex);
+          };
+          fabric.IText.prototype._renderTextLine = function (method, ctx, line, left, top, lineIndex) {
+            renderJustifiedTextLine.call(this, baseRenderIText, method, ctx, line, left, top, lineIndex);
+          };
 
           this.canvas.on("mouse:move", (opt) => {
             const target = this.canvas.getActiveObject();
@@ -3818,7 +3907,7 @@
                     originX: "center",
                     originY: "center",
                     ...extra,
-                  })
+                  }),
                 );
               };
 
@@ -3840,7 +3929,7 @@
                       ? {
                           strokeDashArray: dashArr,
                         }
-                      : {}
+                      : {},
                   );
                 }
               }
@@ -3926,7 +4015,7 @@
                       excludeFromExport: true,
                       originX: "center",
                       originY: "center",
-                    })
+                    }),
                   );
                 }
               }
@@ -3971,7 +4060,7 @@
                     originX: "center",
                     originY: "center",
                     strokeLineCap: "butt",
-                  })
+                  }),
                 );
               }
               for (let j = 1; j < rows; j++) {
@@ -3988,7 +4077,7 @@
                     originX: "center",
                     originY: "center",
                     strokeLineCap: "butt",
-                  })
+                  }),
                 );
               }
 
@@ -4094,7 +4183,7 @@
                       excludeFromExport: true,
                       originX: "center",
                       originY: "center",
-                    })
+                    }),
                   );
                 }
               }
@@ -4145,7 +4234,7 @@
                     originX: "center",
                     originY: "center",
                     strokeLineCap: "butt",
-                  })
+                  }),
                 );
               }
               for (let r = 1; r < rows; r++) {
@@ -4161,7 +4250,7 @@
                     originX: "center",
                     originY: "center",
                     strokeLineCap: "butt",
-                  })
+                  }),
                 );
               }
 
@@ -4196,7 +4285,7 @@
                             strokeWidth: innerWidth,
                             strokeDashArray: innerDash,
                             ...innerOpts,
-                          })
+                          }),
                         );
                       }
                     }
@@ -4210,7 +4299,7 @@
                             strokeWidth: innerWidth,
                             strokeDashArray: innerDash,
                             ...innerOpts,
-                          })
+                          }),
                         );
                       }
                     }
@@ -4223,7 +4312,7 @@
                         strokeWidth: innerWidth,
                         strokeDashArray: innerDash,
                         ...innerOpts,
-                      })
+                      }),
                     );
                     lines.push(
                       new fabric.Line([cx, y, cx, y + size], {
@@ -4231,7 +4320,7 @@
                         strokeWidth: innerWidth,
                         strokeDashArray: innerDash,
                         ...innerOpts,
-                      })
+                      }),
                     );
                   }
                   if (options.diagonals) {
@@ -4241,7 +4330,7 @@
                         strokeWidth: innerWidth,
                         strokeDashArray: innerDash,
                         ...innerOpts,
-                      })
+                      }),
                     );
                     lines.push(
                       new fabric.Line([x, y + size, x + size, y], {
@@ -4249,7 +4338,7 @@
                         strokeWidth: innerWidth,
                         strokeDashArray: innerDash,
                         ...innerOpts,
-                      })
+                      }),
                     );
                   }
                   if (options.innerSquare) {
@@ -4266,7 +4355,7 @@
                         strokeWidth: innerWidth,
                         strokeDashArray: innerDash,
                         ...innerOpts,
-                      })
+                      }),
                     );
                   }
                 }
@@ -4454,7 +4543,7 @@
                   selectable: false,
                   evented: false,
                   isGrid: true,
-                })
+                }),
               );
             },
             // --- 通用路径添加方法 ---
@@ -4531,7 +4620,7 @@
                   width: w,
                   height: h,
                   strokeWidth: cfg.strokeWidth,
-                })
+                }),
               );
             },
 
@@ -4563,7 +4652,7 @@
                   width: w,
                   height: h,
                   strokeWidth: thinW,
-                })
+                }),
               );
               const offset = GAP + thinW / 2 + thickW / 2;
               canvas.add(
@@ -4574,7 +4663,7 @@
                   width: w + offset * 2,
                   height: h + offset * 2,
                   strokeWidth: thickW,
-                })
+                }),
               );
             },
           },
@@ -5247,7 +5336,7 @@
               },
               {
                 passive: false,
-              }
+              },
             );
 
             // 滚轮缩放
@@ -5266,7 +5355,7 @@
               },
               {
                 passive: false,
-              }
+              },
             );
 
             // 点击空白处取消选中
@@ -5281,11 +5370,11 @@
             // 标尺与自适应
             container.addEventListener(
               "scroll",
-              Utils.throttle(() => App.ruler.draw(), 10)
+              Utils.throttle(() => App.ruler.draw(), 10),
             );
             window.addEventListener(
               "resize",
-              Utils.throttle(() => App.zoom.autoFit(), 200)
+              Utils.throttle(() => App.zoom.autoFit(), 200),
             );
 
             // ============================================================
@@ -5549,7 +5638,7 @@
                 textAlign: "left",
                 prefix: "",
                 suffix: "",
-              })
+              }),
             );
           },
 
@@ -5677,7 +5766,7 @@
                 strokeWidth: 2,
                 originX: "center",
                 originY: "center",
-              })
+              }),
             );
           },
 
@@ -5902,7 +5991,7 @@
                 },
                 {
                   ...act.toObject(["originX", "originY", "left", "top", "scaleX", "scaleY", "angle", "opacity"]),
-                }
+                },
               );
             } else Utils.toast("请先选中一张图片", "error");
           },
@@ -6263,7 +6352,7 @@
                 s.data.push(
                   Array(s.cols)
                     .fill(null)
-                    .map(() => this.createCell())
+                    .map(() => this.createCell()),
                 );
                 s.rowHeights.push(44);
               }
@@ -6425,7 +6514,7 @@
               .map(() =>
                 Array(cols)
                   .fill(null)
-                  .map(() => this.createCell())
+                  .map(() => this.createCell()),
               );
           },
 
@@ -6862,7 +6951,7 @@
                   row.map((c) => ({
                     ...this.createCell(),
                     ...c,
-                  }))
+                  })),
                 )
               : [];
           },
@@ -6946,7 +7035,7 @@
                     strokeWidth: cell.borderWidth ?? 1,
                     originX: "center",
                     originY: "center",
-                  })
+                  }),
                 );
 
                 if (cell.text && cell.text.trim()) {
@@ -6968,7 +7057,7 @@
                       originY: "center",
                       splitByGrapheme: true,
                       editable: false,
-                    })
+                    }),
                   );
                 }
               }
@@ -6984,7 +7073,7 @@
                 originX: "center",
                 originY: "center",
                 excludeFromExport: true,
-              })
+              }),
             );
 
             return new fabric.Group(objs, {
@@ -7051,7 +7140,7 @@
                     const rawWidth = cell.borderWidth * Math.min(sX, sY);
                     cell.borderWidth = Math.max(0.1, Math.round(rawWidth * 10) / 10);
                   }
-                })
+                }),
               );
 
             tableObj.scaleX = 1;
@@ -7443,20 +7532,19 @@
               }
 
               if (key === "textAlign" && ["i-text", "textbox", "text"].includes(act.type)) {
+                const validOrigin = val === "justify" ? "left" : val;
+
                 let anchorPoint;
-                if (val === "left") {
+                if (validOrigin === "left") {
                   anchorPoint = act.getPointByOrigin("left", "top");
-                } else if (val === "right") {
+                } else if (validOrigin === "right") {
                   anchorPoint = act.getPointByOrigin("right", "top");
                 } else {
                   anchorPoint = act.getPointByOrigin("center", "top");
                 }
-
                 act.set("textAlign", val);
-                act.set("originX", val);
-
-                act.setPositionByOrigin(anchorPoint, val, "top");
-
+                act.set("originX", validOrigin);
+                act.setPositionByOrigin(anchorPoint, validOrigin, "top");
                 act.setCoords();
               } else {
                 if (key === "strokeWidth" && val > 0 && (!act.stroke || act.stroke === "transparent")) {
@@ -8554,7 +8642,7 @@
                   name: label,
                   obj: o,
                   isBg: false,
-                })
+                }),
               );
             });
 
@@ -8565,7 +8653,7 @@
                   name: "【背景】图片",
                   obj: bgObj,
                   isBg: true,
-                })
+                }),
               );
             }
 
@@ -8710,7 +8798,7 @@
               },
               {
                 offset: Number.NEGATIVE_INFINITY,
-              }
+              },
             ).element;
           },
           _replaceObject: function (oldObj, newObj) {
@@ -8802,7 +8890,7 @@
               .setActiveObject(
                 new fabric.ActiveSelection(queue, {
                   canvas: App.canvas,
-                })
+                }),
               )
               .requestRenderAll();
             App.history.saveState();
@@ -8859,7 +8947,7 @@
               .setActiveObject(
                 new fabric.ActiveSelection(objs, {
                   canvas: App.canvas,
-                })
+                }),
               )
               .requestRenderAll();
             this.updateInspector();
@@ -8890,7 +8978,7 @@
             const doc = f.contentWindow.document;
             doc.open();
             doc.write(
-              `<html><head><style>@page{size:${App.state.currentPaper.w}mm ${App.state.currentPaper.h}mm;margin:0}body{margin:0;display:flex;justify-content:center}${css}</style></head><body>${content}</body></html>`
+              `<html><head><style>@page{size:${App.state.currentPaper.w}mm ${App.state.currentPaper.h}mm;margin:0}body{margin:0;display:flex;justify-content:center}${css}</style></head><body>${content}</body></html>`,
             );
             doc.close();
           },
@@ -9131,7 +9219,7 @@
               ],
               {
                 type: "application/json",
-              }
+              },
             );
 
             const a = document.createElement("a");
@@ -9241,6 +9329,7 @@
               App.paper.updateSize();
 
               App.canvas.clear();
+
               const done = () => {
                 if (App.state.paperType === "label") {
                   App.state.label.mode = "design";
@@ -9252,6 +9341,18 @@
                 App.ui.updateLayerList();
 
                 App.canvas.getObjects().forEach((o) => {
+                  if (!o.isGrid) {
+                    o.set({
+                      selectable: true,
+                      evented: true,
+                    });
+                  }
+
+                  if (["i-text", "textbox", "text"].includes(o.type)) {
+                    const isDynamic = o.isDynamicDate || o.isDynamicPageNum || o.isSerialNumber || (o.dataBinding && o.dataBinding.type === "variable") || o.syncMode === "ref";
+                    o.set("editable", !isDynamic);
+                  }
+
                   if (o.isDynamicDate && o.dateConfig) {
                     o.rawContent = Utils.formatDate(new Date(), null, o.dateConfig);
                     App.content.render(o);
@@ -9263,6 +9364,7 @@
                 App.ui.hideLoading();
                 Utils.toast("项目加载成功");
               };
+
               data.canvasData ? App.canvas.loadFromJSON(data.canvasData, done) : done();
             } catch (e) {
               console.error(e);
@@ -9537,7 +9639,15 @@
           _convertObj: async function (o) {
             if (o.type === "group" || o.isTable) {
               const newChildren = [];
-              for (const child of o.getObjects()) newChildren.push(await this._convertObj(child));
+              const originalAngle = o.angle;
+              o.angle = 0;
+
+              for (const child of o.getObjects()) {
+                newChildren.push(await this._convertObj(child));
+              }
+
+              o.angle = originalAngle;
+
               const props = o.toObject(["left", "top", "angle", "scaleX", "scaleY", "originX", "originY", "opacity", "fill", "stroke", "strokeWidth", "isTable", "tableData", "width", "height"]);
               const newGroup = new fabric.Group(newChildren, props);
               if (o.isTable) {
@@ -9549,37 +9659,75 @@
 
             if (["i-text", "text", "textbox"].includes(o.type)) {
               if (!o.text || !o.text.toString().trim()) return o;
-              const font = await this.getFont(o.fontFamily);
+
+              let font = await this.getFont(o.fontFamily);
+              if (!font) font = await this.getFont("DEFAULT");
               if (!font) return o;
 
               try {
                 const textStr = o.text.toString();
-                const fontSize = o.fontSize,
-                  lineHeight = o.lineHeight || 1.16;
-                const lines = textStr.split("\n");
+                const fontSize = o.fontSize;
+                const lineHeight = o.lineHeight || 1.16;
+                const boxWidth = o.width;
+
+                let fabricLines = o.textLines || textStr.split("\n");
+
                 let pathData = "";
-                let startY = -((lines.length - 1) * fontSize * lineHeight) / 2 + fontSize * 0.35;
+                const totalH = fabricLines.length * fontSize * lineHeight;
+                let startY = -totalH / 2 + fontSize * (lineHeight - 1) + fontSize * 0.8;
 
-                lines.forEach((line, i) => {
-                  if (!line.trim()) return;
-                  const lineWidth = font.getAdvanceWidth(line, fontSize);
-                  let xOffset = -lineWidth / 2;
-                  if (o.textAlign === "center") xOffset = -lineWidth / 2;
-                  else if (o.textAlign === "right") xOffset = (o.type === "textbox" ? o.width / 2 : 0) - lineWidth;
-                  else xOffset = o.type === "textbox" ? -o.width / 2 : -lineWidth / 2;
+                fabricLines.forEach((lineText, i) => {
+                  if (!lineText) return;
 
-                  pathData += font.getPath(line, xOffset, startY + i * fontSize * lineHeight, fontSize).toPathData(2);
+                  const lineWidth = font.getAdvanceWidth(lineText, fontSize);
+                  const currentY = startY + i * fontSize * lineHeight;
+
+                  const isLastLine = i === fabricLines.length - 1;
+                  const isShortLine = lineWidth < boxWidth * 0.85;
+
+                  const shouldJustify = o.type === "textbox" && o.textAlign === "justify" && !isLastLine && !isShortLine;
+
+                  if (shouldJustify) {
+                    const extraSpace = boxWidth - lineWidth;
+                    const spacePerChar = lineText.length > 1 ? extraSpace / (lineText.length - 1) : 0;
+
+                    let currentX = -boxWidth / 2;
+
+                    for (const char of lineText) {
+                      const charPath = font.getPath(char, currentX, currentY, fontSize);
+                      pathData += charPath.toPathData(2);
+                      currentX += font.getAdvanceWidth(char, fontSize) + spacePerChar;
+                    }
+                  } else {
+                    let xOffset = 0;
+                    if (o.textAlign === "center") {
+                      xOffset = -lineWidth / 2;
+                    } else if (o.textAlign === "right") {
+                      xOffset = (o.type === "textbox" ? boxWidth / 2 : lineWidth / 2) - lineWidth;
+                    } else {
+                      xOffset = o.type === "textbox" ? -boxWidth / 2 : -lineWidth / 2;
+                    }
+
+                    const linePath = font.getPath(lineText, xOffset, currentY, fontSize);
+                    pathData += linePath.toPathData(2);
+                  }
                 });
 
                 const path = new fabric.Path(pathData, {
-                  ...o.toObject(["fill", "stroke", "strokeWidth", "opacity", "scaleX", "scaleY", "angle", "shadow", "originX", "originY", "left", "top", "width", "height"]),
-                  objectCaching: false,
+                  ...o.toObject(["fill", "stroke", "strokeWidth", "opacity", "scaleX", "scaleY", "angle", "shadow", "originX", "originY", "left", "top"]),
+                  width: o.width,
+                  height: o.height,
                   stroke: o.stroke || null,
                   fill: o.fill,
+                  objectCaching: false,
                 });
-                path.setPositionByOrigin(o.getCenterPoint(), "center", "center");
+
+                const center = o.getCenterPoint();
+                path.setPositionByOrigin(center, "center", "center");
+
                 return path;
               } catch (e) {
+                console.warn("Text convert error:", e);
                 return o;
               }
             }
