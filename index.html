@@ -5209,6 +5209,24 @@
                   return;
                 }
               }
+
+              if (t.isSmartRect) {
+                const finalW = t.width * t.scaleX;
+                const finalH = t.height * t.scaleY;
+                if (Math.abs(t.scaleX - 1) > 0.001 || Math.abs(t.scaleY - 1) > 0.001) {
+                    t.set({
+                        width: finalW,
+                        height: finalH,
+                        scaleX: 1,
+                        scaleY: 1
+                    });
+                    App.tools.updateSmartCorner('refresh');
+                    App.ui.updateInspector(); 
+                    return;
+                }
+              }
+
+
               if (t.type === "textbox") {
                 const finalW = Math.round(t.width * t.scaleX);
                 const finalH = Math.round(t.height * t.scaleY);
@@ -6068,7 +6086,6 @@
           updateSmartCorner: function (key, value) {
             const act = App.canvas.getActiveObject();
             if (!act || (act.type !== "rect" && !act.isSmartRect)) return;
-
             let cfg = act.cornerConfig || {
               tl: 0,
               tr: 0,
@@ -6076,42 +6093,44 @@
               br: 0,
               style: "round",
             };
+            if (key !== "refresh") {
+              if (key === "all") {
+                const v = parseInt(value) || 0;
+                cfg.tl = cfg.tr = cfg.bl = cfg.br = v;
+                ["tl", "tr", "bl", "br"].forEach((k) => (document.getElementById("corner" + k.toUpperCase()).value = v));
+                document.getElementById("masterRadiusVal").innerText = v;
+              } else if (key === "style") cfg.style = value;
+              else cfg[key] = parseInt(value) || 0;
+            }
 
-            if (key === "all") {
-              const v = parseInt(value) || 0;
-              cfg.tl = cfg.tr = cfg.bl = cfg.br = v;
-              ["tl", "tr", "bl", "br"].forEach((k) => (document.getElementById("corner" + k.toUpperCase()).value = v));
-              document.getElementById("masterRadiusVal").innerText = v;
-            } else if (key === "style") cfg.style = value;
-            else cfg[key] = parseInt(value) || 0;
-
-            const w = act.width;
-            const h = act.height;
-            const pathData = Utils.generateSmartRectPath(w, h, cfg, cfg.style);
+            const currentScaleX = act.scaleX || 1;
+            const currentScaleY = act.scaleY || 1;
+            const finalW = act.width * currentScaleX;
+            const finalH = act.height * currentScaleY;
+            const pathData = Utils.generateSmartRectPath(finalW, finalH, cfg, cfg.style);
             const center = act.getCenterPoint();
             const safeProps = act.toObject(["fill", "stroke", "strokeWidth", "opacity", "angle", "strokeDashArray", "strokeLineCap", "strokeLineJoin", "shadow", "globalCompositeOperation"]);
             const propsToRemove = ["type", "width", "height", "scaleX", "scaleY", "left", "top", "path", "pathOffset"];
             propsToRemove.forEach((prop) => delete safeProps[prop]);
-
             const newObj = new fabric.Path(pathData, {
               ...safeProps,
               isSmartRect: true,
               cornerConfig: cfg,
-              scaleX: act.scaleX || 1,
-              scaleY: act.scaleY || 1,
+              width: finalW,  
+              height: finalH, 
+              scaleX: 1,      
+              scaleY: 1,      
               originX: "center",
               originY: "center",
               left: center.x,
               top: center.y,
             });
-
             const idx = App.canvas.getObjects().indexOf(act);
             App.canvas.discardActiveObject();
             App.canvas.remove(act);
             App.canvas.insertAt(newObj, idx, true);
             App.canvas.setActiveObject(newObj);
             App.canvas.requestRenderAll();
-
             App.ui.updateInspector();
             App.history.saveState();
           },
