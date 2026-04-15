@@ -17,6 +17,7 @@
     <script src="./static/xlsx.full.min.js"></script>
     <script src="./static/idb-keyval.umd.js"></script>
     <script src="./static/bwip-js.min.js"></script>
+    <script src="./static/templates-data.js"></script>
     <link rel="preload" href="./static/SourceHanSerifCN-Bold.ttf" as="font" type="font/ttf" crossorigin />
     <style>
       /* 基础滚动条隐藏 */
@@ -9064,15 +9065,29 @@
                 App.ui.showLoading(`正在生成第 ${i + 1} 页...`);
                 const vC =  await this._getExportCanvas(); 
                 vC.setViewportTransform([1, 0, 0, 1, 0, 0]);
-                const svg = vC.toSVG({
-                  suppressPreamble: true,
-                  viewBox: { x: 0, y: 0, width: App.state.baseWidth, height: App.state.baseHeight }
-                });
-                vC.dispose();
-                if (i > 0) pdf.addPage([w, h], orientation);
-                await pdf.svg(new DOMParser().parseFromString(svg, "image/svg+xml").documentElement, {
-                  x: 0, y: 0, width: w, height: h
-                });
+                
+                // 检查是否有大型图片，使用不同的导出策略
+                const objects = vC.getObjects();
+                const hasLargeImage = objects.some(o => o.type === 'image' && o.width * o.height > 2000000);
+                
+                if (hasLargeImage) {
+                  // 大型图片：使用 canvas toDataURL 直接导出，避免 SVG 解析栈溢出
+                  const dataUrl = vC.toDataURL({ format: 'png', multiplier: 2 });
+                  vC.dispose();
+                  if (i > 0) pdf.addPage([w, h], orientation);
+                  pdf.addImage(dataUrl, 'PNG', 0, 0, w, h);
+                } else {
+                  // 普通内容：使用 SVG 方式导出（保持矢量质量）
+                  const svg = vC.toSVG({
+                    suppressPreamble: true,
+                    viewBox: { x: 0, y: 0, width: App.state.baseWidth, height: App.state.baseHeight }
+                  });
+                  vC.dispose();
+                  if (i > 0) pdf.addPage([w, h], orientation);
+                  await pdf.svg(new DOMParser().parseFromString(svg, "image/svg+xml").documentElement, {
+                    x: 0, y: 0, width: w, height: h
+                  });
+                }
               }
 
               App.ui.showLoading("正在保存 PDF...");
@@ -9811,29 +9826,37 @@
         
         templates: {
           data: [],
+          // 内嵌模板数据，解决 file:// 协议下 fetch 失败的问题
+          embeddedTemplates: {
+            "standard_a4": {"version":"4.0","timestamp":"2025-12-07T07:03:17.688Z","settings":{"marginTop":132.2825,"marginBottom":132.2825,"marginLeft":83.149,"marginRight":83.149,"rowCount":20,"gridColor":"#e11d48","strokeWidth":1,"doubleFirst":true,"doubleLast":true,"gridDashed":false,"gridDashArray":4},"paperSize":"A4","canvasData":{"version":"5.3.0","objects":[{"type":"i-text","version":"5.3.0","originX":"center","originY":"top","left":396.85,"top":50,"width":392,"height":55.37,"fill":"#e11d48","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"fontFamily":"SourceHanSerifCN-Bold","fontWeight":"bold","fontSize":49,"text":"红头文件标题占位","underline":false,"overline":false,"linethrough":false,"textAlign":"left","fontStyle":"normal","lineHeight":1.16,"textBackgroundColor":"","charSpacing":0,"styles":[],"direction":"ltr","path":null,"pathStartOffset":0,"pathSide":"left","pathAlign":"baseline","selectable":true,"evented":true}]}},
+            "text": {"version":"4.0","timestamp":"2025-12-07T04:04:22.687Z","settings":{"marginTop":170.07750000000001,"marginBottom":132.2825,"marginLeft":83.149,"marginRight":83.149,"rowCount":1,"gridColor":"#e11d48","strokeWidth":1,"doubleFirst":true,"doubleLast":true},"paperSize":"A4","canvasData":{"version":"5.3.0","objects":[{"type":"i-text","version":"5.3.0","originX":"center","originY":"top","left":396.85,"top":57.67,"width":588,"height":55.37,"fill":"#e11d48","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"fontFamily":"SourceHanSerifCN-Bold","fontWeight":"bold","fontSize":49,"text":"广州某某餐饮连锁有限公司","underline":false,"overline":false,"linethrough":false,"textAlign":"left","fontStyle":"normal","lineHeight":1.16,"textBackgroundColor":"","charSpacing":0,"styles":[],"direction":"ltr","path":null,"pathStartOffset":0,"pathSide":"left","pathAlign":"baseline","selectable":true,"evented":true},{"type":"i-text","version":"5.3.0","originX":"center","originY":"top","left":396.85,"top":117.85,"width":583.59,"height":27.84,"fill":"#e11d48","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"fontFamily":"SourceHanSerifCN-Bold","fontWeight":"bold","fontSize":24.637506155355794,"text":"GUANGZHOU XXX CATERING CHAIN CO., LTD.","underline":false,"overline":false,"linethrough":false,"textAlign":"left","fontStyle":"normal","lineHeight":1.16,"textBackgroundColor":"","charSpacing":0,"styles":[],"direction":"ltr","path":null,"pathStartOffset":0,"pathSide":"left","pathAlign":"baseline","selectable":true,"evented":true},{"type":"textbox","version":"5.3.0","originX":"center","originY":"center","left":401.44,"top":1028.53,"width":635.62,"height":21.47,"fill":"#e11d48","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"fontFamily":"SimSun","fontWeight":"normal","fontSize":19,"text":"地址:广州市市中区XXXXXXX                      电话：020 - 88888888","underline":false,"overline":false,"linethrough":false,"textAlign":"left","fontStyle":"normal","lineHeight":1.16,"textBackgroundColor":"","charSpacing":0,"styles":[],"direction":"ltr","path":null,"pathStartOffset":0,"pathSide":"left","pathAlign":"baseline","minWidth":20,"splitByGrapheme":true,"selectable":true,"evented":true}]}},
+            "red_head": {"version":"4.0","timestamp":"2025-12-07T09:32:17.149Z","settings":{"marginTop":132.2825,"marginBottom":132.2825,"marginLeft":105.82600000000001,"marginRight":105.82600000000001,"rowCount":0,"gridColor":"#e11d48","strokeWidth":1,"doubleFirst":true,"doubleLast":true,"gridDashed":false,"gridDashArray":4,"paperBgColor":"#ffffff"},"paperSize":"A4","canvasData":{"version":"5.3.0","objects":[{"type":"i-text","version":"5.3.0","originX":"center","originY":"center","left":396.85,"top":219.11,"width":655.05,"height":42.22,"fill":"#e11d48","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":2.43,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"fontFamily":"SourceHanSerifCN-Bold","fontWeight":"normal","fontSize":37.35910547652756,"text":"XXXXXXXXX小区业主委员会会议文件","underline":false,"overline":false,"linethrough":false,"textAlign":"left","fontStyle":"normal","lineHeight":1.16,"textBackgroundColor":"","charSpacing":0,"styles":[],"direction":"ltr","path":null,"pathStartOffset":0,"pathSide":"left","pathAlign":"baseline","selectable":true,"evented":true},{"type":"line","version":"5.3.0","originX":"center","originY":"center","left":212.29,"top":341.16,"width":582.04,"height":0,"fill":"rgb(0,0,0)","stroke":"#e11d48","strokeWidth":2,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":0.5,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"selectable":true,"evented":true,"x1":-291.0215,"x2":291.0215,"y1":0,"y2":0},{"type":"polygon","version":"5.3.0","originX":"center","originY":"center","left":393.83,"top":341.16,"width":95.11,"height":90.45,"fill":"#e11d48","stroke":"transparent","strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":0.27,"scaleY":0.27,"angle":180,"flipX":false,"flipY":true,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"selectable":true,"evented":true,"points":[{"x":3.061616997868383e-15,"y":-50},{"x":11.226698318786237,"y":-15.452224592561498},{"x":47.552825814757675,"y":-15.450849718747369},{"x":18.165179461237432,"y":5.902224592561495},{"x":29.389262614623657,"y":40.45084971874737},{"x":1.1695376931857224e-15,"y":19.1},{"x":-29.38926261462365,"y":40.45084971874737},{"x":-18.165179461237432,"y":5.902224592561498},{"x":-47.55282581475768,"y":-15.450849718747364},{"x":-11.226698318786239,"y":-15.452224592561496}]},{"type":"line","version":"5.3.0","originX":"center","originY":"center","left":575.36,"top":341.16,"width":582.04,"height":0,"fill":"rgb(0,0,0)","stroke":"#e11d48","strokeWidth":2,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":0.5,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"selectable":true,"evented":true,"x1":-291.0215,"x2":291.0215,"y1":0,"y2":0}],"background":"#ffffff"}},
+          },
           init: async function () {
-            try {
-              this.data = await (await fetch("./templates/templates.json")).json();
-              const grid = document.getElementById("templateGrid");
-              if (grid) {
-                grid.innerHTML = "";
-                this.data.forEach((t) => {
-                  const d = document.createElement("div");
-                  d.className = "template-card bg-white p-3 rounded-xl border border-gray-200 cursor-pointer transition flex flex-col gap-2";
-                  d.innerHTML = `<div class="h-36 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center border border-gray-100">${
-                    t.thumbnail ? `<img src="${t.thumbnail}" class="h-full w-auto object-contain">` : '<i class="ph ph-file-plus text-3xl text-gray-300"></i>'
-                  }</div><div><h3 class="font-bold text-slate-700 text-sm">${t.name}</h3><p class="text-slate-400 text-xs">${t.desc || "无描述"}</p></div>`;
-                  d.onclick = () => this.load(t.id);
-                  grid.appendChild(d);
-                });
-              }
-            } catch {
-              Utils.toast("模板加载失败", "error");
+            // 使用内嵌模板列表数据
+            this.data = [
+              {"id": "standard_a4", "name": "标准信笺 A4", "desc": "经典公文样式，适合正式文件"},
+              {"id": "text", "name": "名称抬头 A4", "desc": "自定义单位名称抬头，适合商务文件"},
+              {"id": "text_logo", "name": "名称+LOGO 抬头 A4", "desc": "自定义单位名称+LOGO 抬头，适合商务文件"},
+              {"id": "red_head", "name": "简单红头模板", "desc": "自定义抬头内容，适合正式文件"},
+              {"id": "certificate", "name": "奖状", "desc": "自定义打印示例"},
+              {"id": "blank_a4", "name": "空白 A4", "desc": "默认设置，自由排版"}
+            ];
+            const grid = document.getElementById("templateGrid");
+            if (grid) {
+              grid.innerHTML = "";
+              this.data.forEach((t) => {
+                const d = document.createElement("div");
+                d.className = "template-card bg-white p-3 rounded-xl border border-gray-200 cursor-pointer transition flex flex-col gap-2";
+                d.innerHTML = `<div class="h-36 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center border border-gray-100"><i class="ph ph-file-text text-3xl text-gray-300"></i></div><div><h3 class="font-bold text-slate-700 text-sm">${t.name}</h3><p class="text-slate-400 text-xs">${t.desc || "无描述"}</p></div>`;
+                d.onclick = () => this.load(t.id);
+                grid.appendChild(d);
+              });
             }
           },
 
           load: async function (id) {
-            if (id === "blank_a4" || !this.data.find((i) => i.id === id)?.url) {
+            if (id === "blank_a4") {
               App.dataSource.close();
               App.ui.showLoading("创建中...");
               setTimeout(() => {
@@ -9862,16 +9885,24 @@
               return;
             }
 
-            const t = this.data.find((i) => i.id === id);
-            if (t?.url) {
-              App.ui.showLoading("下载模板...");
+            // 使用内嵌模板数据
+            let templateData = this.embeddedTemplates[id];
+            // 大型模板从外部 JS 文件获取
+            if (!templateData && typeof EMBEDDED_TEMPLATES !== 'undefined') {
+              templateData = EMBEDDED_TEMPLATES[id];
+            }
+            
+            if (templateData) {
+              App.ui.showLoading("加载模板...");
               try {
                 await App.dataSource.close();
-                App.io.loadProjectData(await (await fetch(t.url)).json());
-              } catch {
-                Utils.toast("加载失败", "error");
+                App.io.loadProjectData(typeof templateData === 'string' ? JSON.parse(templateData) : templateData);
+              } catch (e) {
+                Utils.toast("加载失败: " + e.message, "error");
                 App.ui.hideLoading();
               }
+            } else {
+              Utils.toast("模板不存在", "error");
             }
           },
         },
